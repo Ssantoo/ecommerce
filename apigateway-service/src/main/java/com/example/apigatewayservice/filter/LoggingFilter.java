@@ -36,12 +36,12 @@ public class LoggingFilter extends AbstractGatewayFilterFactory<LoggingFilter.Co
             log.info("Logging Filter baseMessage : {}", config.getBaseMessage());
 
             if(config.isPreLogger()){
-                log.info("Logging PRE Start : request id = {}", request.getId());
+                log.info("Logging PRE Filter : request id = {}", request.getId());
             }
 
             return chain.filter(exchange).then(Mono.fromRunnable(()->{
                 if(config.isPostLogger()){
-                    log.info("Logging POST End : response code = {}", response.getStatusCode());
+                    log.info("Logging POST Filter : response code = {}", response.getStatusCode());
                 }
             }));
         }, Ordered.LOWEST_PRECEDENCE); //우선순위
