@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user-service")
+@RequestMapping("/")
 public class UsersController {
 
     //application yml 파일 정보를 가져오고 싶을떄는 방법이 2가지 있다
