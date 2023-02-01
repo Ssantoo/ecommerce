@@ -40,7 +40,7 @@ public class WebSecurity {
         AuthenticationManager authenticationManager = getAuthenticationFilter(http);
 
         http.csrf().disable();
-        http.authorizeRequests().antMatchers("/users/**").permitAll();
+       // http.authorizeRequests().antMatchers("/users/**").permitAll();
         http.authorizeRequests()
                 .antMatchers("/actuator/**").permitAll() // actuator permitAll
                 .antMatchers("/error/**").permitAll()
