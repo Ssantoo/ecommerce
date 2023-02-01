@@ -9,6 +9,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -25,13 +26,20 @@ import java.util.ArrayList;
 import java.util.Date;
 
 @Slf4j
-@RequiredArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final UserService userService;
+    private UserService userService;
+    private Environment env;
 
-    private final Environment env;
+    public AuthenticationFilter(AuthenticationManager authenticationManager) {
+        super.setAuthenticationManager(authenticationManager);
+    }
 
+    public AuthenticationFilter(AuthenticationManager authenticationManager, UserService userService, Environment env) {
+        super.setAuthenticationManager(authenticationManager);
+        this.userService = userService;
+        this.env = env;
+    }
 
 
     //로그인 요청을 보냈을 때 로직
@@ -50,9 +58,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                     new ArrayList<>()       //권한 정보
                             )
                     );
+
         } catch(IOException e){
             throw new RuntimeException(e);
         }
+
     }
 
     //로그인 성공했을 때 로직
