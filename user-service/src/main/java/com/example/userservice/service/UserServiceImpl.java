@@ -7,6 +7,7 @@ import com.example.userservice.jpa.UserRepository;
 import com.example.userservice.vo.ResponseOrder;
 import com.example.userservice.vo.ResponseUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.security.core.userdetails.User;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
@@ -32,12 +34,21 @@ public class UserServiceImpl implements UserService{
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByEmail(username);
 
+//        System.out.println(userEntity);
+//        if(userEntity == null)
+//            throw new UsernameNotFoundException("user가 존재하지 않습니다.");
+
+        if (userEntity == null) {
+            throw new UsernameNotFoundException(username);
+        }
+
         System.out.println(userEntity);
 
-        if(userEntity == null) throw new UsernameNotFoundException("user가 존재하지 않습니다.");
+        return new User(username, userEntity.getEncryptedPwd(),
+                true, true, true, true,
+                new ArrayList<>());
 
-        return new User(userEntity.getEmail(), userEntity.getEncryptedPwd(),
-                true, true, true, true, new ArrayList<>());
+
     }
 
     @Override
