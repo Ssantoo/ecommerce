@@ -34,10 +34,6 @@ public class UserServiceImpl implements UserService{
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByEmail(username);
 
-//        System.out.println(userEntity);
-//        if(userEntity == null)
-//            throw new UsernameNotFoundException("user가 존재하지 않습니다.");
-
         if (userEntity == null) {
             throw new UsernameNotFoundException(username);
         }

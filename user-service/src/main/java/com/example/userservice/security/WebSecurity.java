@@ -49,7 +49,7 @@ public class WebSecurity {
                 .authenticationManager(authenticationManager)
                 .addFilter(getAuthenticationFilter(authenticationManager));
 
-        // frame load 하게 해줌
+        // //h2 console error 해결을 위해
         http.headers().frameOptions().disable();
 
         return http.build();
@@ -69,15 +69,17 @@ public class WebSecurity {
 
     }
 
+    private AuthenticationFilter getAuthenticationFilter(AuthenticationManager authenticationManager) {
+        return new AuthenticationFilter(authenticationManager, userService, env);
+    }
+
     private AuthenticationManager getAuthenticationFilter(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
         return authenticationManagerBuilder.build();
     }
 
-    private AuthenticationFilter getAuthenticationFilter(AuthenticationManager authenticationManager) {
-        return new AuthenticationFilter(authenticationManager, userService, env);
-    }
+
 
 
 
