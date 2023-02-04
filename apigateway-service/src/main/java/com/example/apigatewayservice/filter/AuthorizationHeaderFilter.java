@@ -61,6 +61,10 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                     .parseClaimsJws(jwt).getBody()
                     .getSubject();
 
+            System.out.println(subject);
+
+            System.out.println(env.getProperty("token.secret"));
+
             //jws로 파싱하고 그 앞에서 subject값
         } catch (Exception ex){
             returnValue = false;
