@@ -97,6 +97,7 @@ public class UserServiceImpl implements UserService{
 //        List<ResponseOrder> ordersList = orderListResponse.getBody();	//(3)
 
         /* Using a feign client */
+
         List<ResponseOrder> ordersList = orderServiceClient.getOrderByUserId(userId);
         
         userDto.setOrders(ordersList);
