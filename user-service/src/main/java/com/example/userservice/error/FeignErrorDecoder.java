@@ -2,10 +2,20 @@ package com.example.userservice.error;
 
 import feign.Response;
 import feign.codec.ErrorDecoder;
+import lombok.AllArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+@Component
+@AllArgsConstructor
 public class FeignErrorDecoder implements ErrorDecoder {
+
+    private final Environment env;
+
+
+
 
     @Override
     public Exception decode(String methodKey, Response response) {
@@ -15,8 +25,8 @@ public class FeignErrorDecoder implements ErrorDecoder {
             case 404 :
                 if (methodKey.contains("getOrders")) {    //메서드명
                     return new ResponseStatusException(HttpStatus.valueOf(response.status()),
-                            "유저 주문이 비엇습니다."
-                    );
+                            env.getProperty("order_service.exception.orders_is_empty"));
+
                 }
                 break;
             default:
