@@ -2,6 +2,7 @@ package com.example.orderservice.controller;
 
 import com.example.orderservice.dto.OrderDto;
 import com.example.orderservice.jpa.OrderEntity;
+import com.example.orderservice.messagequeue.KafkaProducer;
 import com.example.orderservice.service.OrderService;
 import com.example.orderservice.vo.RequestOrder;
 import com.example.orderservice.vo.ResponseOrder;
@@ -25,6 +26,9 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    private final KafkaProducer kafkaProducer;
+
+
     @GetMapping("/health_check")
     public String status(){
         return String.format("orderService 포트는 %s",env.getProperty("local.server.port"));
@@ -39,7 +43,11 @@ public class OrderController {
         OrderDto orderDto = mapper.map(requestOrder, OrderDto.class);
         orderDto.setUserId(userId);
         OrderDto createOrder = orderService.createOrder(orderDto);
+
         ResponseOrder responseOrder = mapper.map(createOrder, ResponseOrder.class);
+
+        /* 저장 후 카프카 보내기*/
+        kafkaProducer.send("test-catalog-topic", orderDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseOrder);
     }
